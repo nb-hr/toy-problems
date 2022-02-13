@@ -25,21 +25,86 @@ var makeHashTable = function() {
   var storage = [];
   var storageLimit = 4;
   var size = 0;
-  
-  result.insert = function(/*...*/ 
-) {
+
+  var resize = function(newSize) {
+    // collect all the pairs
+    var pairs = [];
+    for (var i = 0; i < storage.length; i++) {
+      if (!storage[i]) { continue; }
+      for (var j = 0; j < storage[i].length; j++) {
+        if (!storage[i][j]) { continue; }
+        pairs.push(storage[i][j]);
+      }
+    }
+    storageLimit = newSize;
+    storage = [];
+    size = 0;
+    for (var i = 0; i < pairs.length; i++) {
+      result.insert(pairs[i][0], pairs[i][1]);
+    }
+  };
+    
+  result.insert = function(/*...*/  key, value ) {
     // TODO: implement `insert`
-  };
 
-  result.retrieve = function(/*...*/ 
-) {
+    var index = getIndexBelowMaxForKey(key, storageLimit);
+    storage[index] = storage[index] || [];
+    var pairs = storage[index];
+    var pair;
+    for (var i = 0; i < pairs.length; i++) {
+      pair = pairs[i];
+      if (pair[0] === key) {
+        pair[1] = value;
+        return;
+      }
+    }
+
+    pairs.push([key, value]);
+    size++;
+
+    if (size >= storageLimit * 0.75) {
+      // increase the size of the hash table
+      resize(storageLimit * 2);
+    }
+      };
+
+  result.retrieve = function(/*...*/  key ) {
     // TODO: implement `retrieve`
-  };
 
-  result.remove = function(/*...*/ 
-) {
+    var index = getIndexBelowMaxForKey(key, storageLimit);
+    var pairs = storage[index];
+    if (!pairs) { return; }
+    var pair;
+
+    for (var i = 0; i < pairs.length; i++) {
+      pair = pairs[i];
+      if (pair && pair[0] === key) {
+        return pair[1];
+      }
+    }
+      };
+
+  result.remove = function(/*...*/  key ) {
     // TODO: implement `remove`
-  };
+
+    var index = getIndexBelowMaxForKey(key, storageLimit);
+    var pairs = storage[index];
+    var pair;
+
+    for (var i = 0; i < pairs.length; i++) {
+      pair = pairs[i];
+      if (pair[0] === key) {
+        var value = pair[1];
+        pairs.splice(i, 1);
+        size--;
+        if (size <= storageLimit * 0.25) {
+          // decrease the size of the hash table
+          resize(storageLimit / 2);
+        }
+        return value;
+      }
+    }
+      };
 
   return result;
 };

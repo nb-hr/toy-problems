@@ -7,7 +7,22 @@
  * Extra credit: Make your function handle negative numbers.
  */
 
+// Create a convenience function that sorts arrays ascending numerically
+Array.prototype.sortAscending = function() {
+  this.sort(function(a, b) {
+    return a - b;
+  });
+  return this;
+};
 
 var largestProductOfThree = function(array) {
-  // TODO: everything
-};
+
+  // Make a copy of the input array and sort it numerically
+  array = array.slice().sortAscending();
+
+  var n = array.length;
+  var lastProduct = array[n-1] * array[n-2] * array[n-3];
+  var firstProduct = array[n-1] * array[0] * array[1];
+
+  return Math.max(firstProduct, lastProduct);
+  };

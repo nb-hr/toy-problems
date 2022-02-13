@@ -19,21 +19,41 @@
   */
   var Stack = function() {
 
+    var storage = [];
+    var minValueStorage = [];
+    
   // add an item to the top of the stack
     this.push = function(value) {
-    };
+
+      if (!minValueStorage.length ||
+          value <= minValueStorage[minValueStorage.length - 1]) {
+        minValueStorage.push(value);
+      }
+      storage.push(value);
+        };
 
   // remove an item from the top of the stack
     this.pop = function() {
-    };
+
+
+      var value = storage.pop();
+      if (value === minValueStorage[minValueStorage.length - 1]) {
+        minValueStorage.pop();
+      }
+      return value;
+        };
 
   // return the number of items in the stack
     this.size = function() {
-    };
+
+      return storage.length;
+        };
   
   // return the minimum value in the stack
     this.min = function() {
 
+      return minValueStorage[minValueStorage.length - 1];
+    
     };
 
   };

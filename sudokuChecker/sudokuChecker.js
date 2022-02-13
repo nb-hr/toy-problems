@@ -19,8 +19,61 @@ Example input:
 */
 
 
+// Helper function to ensure a given array
+// only contains all unique digits 1...9
+function hasConflicts(numbers) {
+  return (
+    // check for only 9 items
+    numbers.length !== 9 ||
+    // check for a total of 45 (sum of unique digits 1 to 9)
+    numbers.reduce((sum, digit) => sum + digit, 0) != 45 ||
+    // check that the collection isn't 9 5's (also adds up to 45)
+    numbers.indexOf('5') !== numbers.lastIndexOf('5')
+  )
+}
+
+// Helper function to convert a string-encoded board
+// into a parseable 2D matrix of numbers
+function convertBoardStringToMatrix(boardString) {
+  return boardString.split('\n').map(function(row) {
+    return row.split('').map(Number)
+  })
+}
 
 function sudokuChecker(board) {
   // Your code here.
   
-}
+
+  // Convert string into 2D matrix
+  const solution = convertBoardStringToMatrix(board)
+
+  // Loop through rows and columns
+  for (let i = 0; i < 9; i++) {
+    const row = solution[i]
+    const col = solution.map((row) => row[i])
+
+    if (hasConflicts(row) || hasConflicts(col)) {
+      return 'invalid'
+    }
+  }
+
+  // Loop through 3x3 squares
+  // Loop through columns in 3's
+  for (let col = 0; col < 9; col += 3) {
+    // Loop through rows in 3's
+    for (let row = 0; row < 9; row += 3) {
+      // Get rows of squares by splicing them from board rows
+      const row1 = solution[row].splice(0, 3) // destructive
+      const row2 = solution[row + 1].splice(0, 3)
+      const row3 = solution[row + 2].splice(0, 3)
+
+      // Concatenate the rows into an array for checking
+      const square = row1.concat(row2, row3)
+      if (hasConflicts(square)) {
+        return 'invalid'
+      }
+    }
+  }
+
+  return 'solved'
+  }

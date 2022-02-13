@@ -9,17 +9,30 @@
   */
 var Stack = function() {
 
+  var storage = [];
+  var length = 0;
+  
   // add an item to the top of the stack
   this.push = function() {
-  };
+
+    storage[length++] = arguments[0];
+      };
 
   // remove an item from the top of the stack
   this.pop = function() {
-  };
+
+    if (length) {
+      var value = storage[--length];
+      delete storage[length];
+      return value;
+    }
+      };
 
   // return the number of items in the stack
   this.size = function() {
-  };
+
+    return length;
+      };
 };
 
 /**
@@ -32,16 +45,27 @@ var Queue = function() {
 
   // called to add an item to the `queue`
   this.enqueue = function() {
-    // TODO: implement `enqueue`
+
+    inbox.push.apply(inbox, arguments);
+        // TODO: implement `enqueue`
   };
 
   // called to remove an item from the `queue`
   this.dequeue = function() {
-    // TODO: implement `dequeue`
+
+    if (outbox.size() === 0) {
+      while (inbox.size() !== 0) {
+        outbox.push(inbox.pop());
+      }
+    }
+    return outbox.pop();
+        // TODO: implement `dequeue`
   };
 
   // should return the number of items in the queue
   this.size = function() {
-    // TODO: implement `size`
+
+    return inbox.size() + outbox.size();
+        // TODO: implement `size`
   };
 };

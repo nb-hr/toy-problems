@@ -10,6 +10,23 @@
  *    Combines the two arrays and the pivot into a sorted array.
  */
 
+var concat = function () {
+  return [].concat.apply([], arguments);
+};
 
 var quicksort = function(array) {
-};
+
+  if (array.length <= 1) { return array; }
+
+  var pivot = array[0];
+
+  var left = array.slice(1).filter(function (x) {
+    return x < pivot;
+  });
+
+  var right = array.slice(1).filter(function (x) {
+    return x >= pivot;
+  });
+
+  return concat(quicksort(left), [pivot], quicksort(right));
+  };

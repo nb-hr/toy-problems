@@ -11,4 +11,20 @@
 
 // Solved in O(n) time with O(1) memory
 var sumArray = function(array) {
-};
+
+  var maxSum = Number.NEGATIVE_INFINITY;
+  var currentSum = 0;
+
+  for (var i = 0; i < array.length; i ++) {
+    currentSum += array[i];
+
+    if (maxSum < currentSum) {
+      maxSum = currentSum;
+    }
+
+    if (currentSum < 0) {
+      currentSum = 0;
+    }
+  }
+  return maxSum;
+  };
